@@ -46,7 +46,8 @@ const onInitPlugins = () => {
 module.exports = async (env,args) => {
     const isDev = args.mode === 'development';
     const data = await onInitPrompt();
-    console.log(data);
+    const key = data.select.split('/')[0];
+    const value = data.select;
     return {
         name: 'BuiTheAnh',
         devtool: isDev,
@@ -56,11 +57,25 @@ module.exports = async (env,args) => {
             hot: true,
             open: false,
             host: "0.0.0.0",
-            allowedHosts: 'all',
-            historyApiFallback: true
+            allowedHosts: 'auto',
+            historyApiFallback: true,
+            client: {
+                progress: false,
+                overlay: {
+                    warnings: false,
+                    errors: true,
+                    runtimeErrors: true
+                },
+                logging: 'info',
+                reconnect: true,
+                webSocketTransport: 'ws'
+            }
         },
         output: {
-            path: path.resolve(__dirname,declareBuilderOptions.output_folder_name)
+            path: path.resolve(__dirname,declareBuilderOptions.output_folder_name),
+        },
+        entry: {
+            [key]: value
         }
     }
 }
